@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       
-      - mame : Build
+      - name: Build
         run: npm run build -- --base=/zadanie10.2/
 
       - name: Setup Pages
