@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
 @theme {
-  extend: {
-    colors: {
-      primary: "#1DA1F2"
-    }
-    }
-  }
+  --color-primary: #243c5a; 
+}
