@@ -1,2 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  extend: {
+    colors: {
+      primary: "#1DA1F2"
+    },
+    },
+  }
