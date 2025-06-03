@@ -12,6 +12,19 @@ document.querySelector('#app').innerHTML = `
 `
 setupCounter(document.querySelector('#counter'))
 
+async function fetchArticles() {
+    const response = await fetch('https://ghdlclqresgocswlhtwc.supabase.co/rest/v1/articles', {
+        headers: {
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZGxjbHFyZXNnb2Nzd2xodHdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODM0NzM3NywiZXhwIjoyMDYzOTIzMzc3fQ.nnAlH2g4ojhqN9uYyostGAdEjWmW89upQJUWpFS27yI'
+        }
+    });
+    const data = await response.json();
+    console.log(data);
+}
+fetchArticles();
+
+
+
 document.getElementById('articleForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
