@@ -40,6 +40,10 @@ async function fetchArticles() {
         container.appendChild(articleElement);
 })}
 
+fetchArticles();
+
+
+
 document.getElementById('articleForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
