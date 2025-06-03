@@ -13,9 +13,6 @@ document.querySelector('#app').innerHTML = `
 setupCounter(document.querySelector('#counter'))
 
 
-
-
-
 async function fetchArticles() {
     const response = await fetch('https://ghdlclqresgocswlhtwc.supabase.co/rest/v1/articles', {
         headers: {
@@ -23,9 +20,15 @@ async function fetchArticles() {
         }
     });
     const articles = await response.json();
+    console.log(articles); // Sprawdź, co dokładnie zwraca Supabase
+
+    if (!Array.isArray(articles)) {
+        console.error('Dane nie są tablicą!', articles);
+        return;
+    }
 
     const container = document.getElementById('articlesContainer');
-    container.innerHTML = ''; 
+    container.innerHTML = '';
 
     articles.forEach(article => {
         const articleElement = document.createElement('div');
@@ -38,8 +41,8 @@ async function fetchArticles() {
             <hr>
         `;
         container.appendChild(articleElement);
-})}
-
+    });
+}
 fetchArticles();
 
 
