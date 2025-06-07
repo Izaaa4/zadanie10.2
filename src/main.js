@@ -40,9 +40,7 @@ const fetchArticles = async (orderBy = 'created_at.desc') => {
         Authorization: `Bearer ${API_KEY}`
       }
     });
-    if (!response.ok) {
-      throw new Error(`Status: ${response.status}`);
-    }
+    
     const data = await response.json();
     return data;
   } catch (error) {
