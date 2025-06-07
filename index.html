@@ -9,24 +9,6 @@
   <body>
     <div id="app"></div>
 
-    <select id="sort-select">
-        <option value="created_at.asc">Po dacie rosnąco</option>
-        <option value="created_at.desc">Po dacie malejąco</option>
-        <option value="title.asc">Po nazwie alfabetycznie</option>
-    </select>
-
-    <div id="articles-list"></div>
-
-    <form id="article-form">
-        <input type="text" name="title" placeholder="Tytuł" required />
-        <input type="text" name="subtitle" placeholder="Podtytuł" required />
-        <input type="text" name="author" placeholder="Autor" required />
-        <textarea name="content" placeholder="Treść" required></textarea>
-        <input type="date" name="created_at" />
-        <button type="submit">Dodaj artykuł</button>
-    </form>
-</form>
-
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
