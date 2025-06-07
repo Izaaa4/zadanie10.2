@@ -14,12 +14,12 @@ document.querySelector('#app').innerHTML = `
 setupCounter(document.querySelector('#counter'))
 
 const SUPABASE_URL = "https://ghdlclqresgocswlhtwc.supabase.co";
-const API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."; // Skrócone
+const API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZGxjbHFyZXNnb2Nzd2xodHdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODM0NzM3NywiZXhwIjoyMDYzOTIzMzc3fQ.nnAlH2g4ojhqN9uYyostGAdEjWmW89upQJUWpFS27yI";
 
 async function fetchArticles(orderBy = "created_at", orderDirection = "asc") {
     const response = await fetch(`${SUPABASE_URL}/rest/v1/articles?select=*&&order=${orderBy}.${orderDirection}`, {
         headers: {
-            "apikey": API_KEY,
+            "apiKey": API_KEY,
             "Authorization": `Bearer ${API_KEY}`
         }
     });
@@ -46,6 +46,11 @@ function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString("pl-PL", { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
+document.getElementById("sort-select").addEventListener("change", function() {
+    const [orderBy, orderDirection] = this.value.split(".");
+    fetchArticles(orderBy, orderDirection);
+});
+
 document.getElementById("article-form").addEventListener("submit", async function(event) {
     event.preventDefault();
     const formData = new FormData(this);
@@ -70,14 +75,5 @@ document.getElementById("article-form").addEventListener("submit", async functio
     fetchArticles();
 });
 
-document.getElementById("sort-select").addEventListener("change", function() {
-    const sortOption = this.value;
-    let orderBy = "created_at";
-    let orderDirection = "asc";
-
-    if (sortOption === "po dacie malejąco") orderDirection = "desc";
-    if (sortOption === "po nazwie alfabetycznie") orderBy = "title";
-
-    fetchArticles(orderBy, orderDirection);
-});
-
+// Pobierz artykuły przy pierwszym uruchomieniu
+fetchArticles();
