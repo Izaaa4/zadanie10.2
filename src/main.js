@@ -1,79 +1,115 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+import './style.css';
+
+import { format } from 'date-fns';
+const API_URL = 'https://ghdlclqresgocswlhtwc.supabase.co';
+const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZGxjbHFyZXNnb2Nzd2xodHdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODM0NzM3NywiZXhwIjoyMDYzOTIzMzc3fQ.nnAlH2g4ojhqN9uYyostGAdEjWmW89upQJUWpFS27yI';
 
 document.querySelector('#app').innerHTML = `
-  <div>
-    <div class="card">
-      <button id="counter" type="button" class="bg-blue-500 px-4" ></button>
+  <div id="article-list" class="space-y-4 mb-8"></div>
+
+  <label class="block m-3">
+    <select id="sort-select" class="border p-2">
+      <option value="created_at.asc">data rosnąco</option>
+      <option value="created_at.desc">data malejąco</option>
+      <option value="title.asc">nazwa alfabetycznie</option>
+    </select>
+  </label>
+
+  <h2 class="text-xl font-semibold m-3 text-primary">Dodaj nowy artykuł</h2>
+
+  <form id="article-form" class="space-y-2">
+    <input name="title" placeholder="Tytuł" required class="w-full border p-2" />
+    <input name="subtitle" placeholder="Podtytuł" required class="w-full border p-2" />
+    <input name="author" placeholder="Autor" required class="w-full border p-2" />
+    <input type="date" name="created_at" required class="w-full border p-2" />
+
+    <div>
+    <textarea name="content" placeholder="Treść" class="w-full border p-2 h-32"></textarea>
     </div>
-  </div>
-  
-`
-setupCounter(document.querySelector('#counter'))
 
-const SUPABASE_URL = "https://ghdlclqresgocswlhtwc.supabase.co";
-const API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZGxjbHFyZXNnb2Nzd2xodHdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODM0NzM3NywiZXhwIjoyMDYzOTIzMzc3fQ.nnAlH2g4ojhqN9uYyostGAdEjWmW89upQJUWpFS27yI";
+    <button type="submit" class="bg-blue-200 px-4 py-2 rounded">Dodaj</button>
 
-async function fetchArticles(orderBy = "created_at", orderDirection = "asc") {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/articles?select=*&&order=${orderBy}.${orderDirection}`, {
-        headers: {
-            "apiKey": API_KEY,
-            "Authorization": `Bearer ${API_KEY}`
-        }
+  </form>
+`;
+
+//fetchowańsko
+const fetchArticles = async (orderBy = 'created_at.desc') => {
+  try {
+    const response = await fetch(`${API_URL}?order=${orderBy}`, {
+      headers: {
+        apikey: API_KEY,
+        Authorization: `Bearer ${API_KEY}`
+      }
     });
-    const articles = await response.json();
-    renderArticles(articles);
-}
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+};
 
-function renderArticles(articles) {
-    const list = document.getElementById("articles-list");
-    list.innerHTML = "";
-    articles.forEach(article => {
-        const formattedDate = formatDate(article.created_at);
-        list.innerHTML += `<div>
-            <h2>${article.title}</h2>
-            <h3>${article.subtitle}</h3>
-            <p><strong>Autor:</strong> ${article.author}</p>
-            <p><strong>Data:</strong> ${formattedDate}</p>
-            <p>${article.content}</p>
-        </div>`;
-    });
-}
+//pokaz sie
+const renderArticles = async () => {
+  const order = document.getElementById('sort-select')?.value || 'created_at.desc';
+  const articles = await fetchArticles(order);
+  const container = document.getElementById('article-list');
+  container.innerHTML = '';
 
-function formatDate(dateString) {
-    return new Date(dateString).toLocaleDateString("pl-PL", { day: '2-digit', month: '2-digit', year: 'numeric' });
-}
+  articles.forEach((a) => {
+    const div = document.createElement('div');
+    div.className = 'border p-4';
+    div.innerHTML = `
+      <h2 class="text-xl font-semibold">${a.title}</h2>
+      <h3 class="italic text-gray-600">${a.subtitle}</h3>
+      <p class="text-sm text-gray-500">${a.author} – ${format(new Date(a.created_at), 'dd-MM-yyyy')}</p>
+      <div class="mt-2">${a.content}</div>
+    `;
+    container.appendChild(div);
+  });
+};
 
-document.getElementById("sort-select").addEventListener("change", function() {
-    const [orderBy, orderDirection] = this.value.split(".");
-    fetchArticles(orderBy, orderDirection);
+document.getElementById('sort-select').addEventListener('change', renderArticles);
+
+//dodawanie
+document.getElementById('article-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const article = {
+    title: form.title.value,
+    subtitle: form.subtitle.value,
+    author: form.author.value,
+    content: form.content.value,
+    created_at: form.created_at.value
+  };
+  await createNewArticle(article);
+  form.reset();
+  renderArticles();
 });
 
-document.getElementById("article-form").addEventListener("submit", async function(event) {
-    event.preventDefault();
-    const formData = new FormData(this);
-    const newArticle = {
-        title: formData.get("title"),
-        subtitle: formData.get("subtitle"),
-        author: formData.get("author"),
-        content: formData.get("content"),
-        created_at: formData.get("created_at") || new Date().toISOString()
-    };
-
-    await fetch(`${SUPABASE_URL}/rest/v1/articles`, {
-        method: "POST",
-        headers: {
-            "apikey": API_KEY,
-            "Authorization": `Bearer ${API_KEY}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newArticle)
+//dodawanie cz 2
+const createNewArticle = async (article) => {
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        apikey: API_KEY,
+        Authorization: `Bearer ${API_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify(article)
     });
 
-    fetchArticles();
-});
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+};
 
-// Pobierz artykuły przy pierwszym uruchomieniu
-fetchArticles();
+
+renderArticles();
