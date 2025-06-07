@@ -1,5 +1,5 @@
-const API_URL = 'https://fkdenppjrkgyluoadzts.supabase.co/rest/v1/article';
-const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZrZGVucHBqcmtneWx1b2FkenRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNjc5MzAsImV4cCI6MjA2Mzk0MzkzMH0.k574iw0MP3PAhoAZIOjr7Eoq9D6phiUgy_i0ws90vIA';
+const API_URL = 'https://ghdlclqresgocswlhtwc.supabase.co/rest/v1/article';
+const API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZGxjbHFyZXNnb2Nzd2xodHdjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODM0NzM3NywiZXhwIjoyMDYzOTIzMzc3fQ.nnAlH2g4ojhqN9uYyostGAdEjWmW89upQJUWpFS27yI';
 import './style.css';
 import { format } from 'date-fns';
 
