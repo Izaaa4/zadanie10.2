@@ -9,32 +9,22 @@
   <body>
     <div id="app"></div>
 
+<select id="sort-select">
+    <option value="po dacie rosnąco">Po dacie rosnąco</option>
+    <option value="po dacie malejąco">Po dacie malejąco</option>
+    <option value="po nazwie alfabetycznie">Po nazwie alfabetycznie</option>
+</select>
+<div id="articles-list"></div>
 
-    <main>
-      <form id="articleForm">
-      <label>
-        Title
-        <input type="text" id="title" required />
-      </label>
-      <label>
-        Subtitle
-        <input type="text" id="subtitle" placeholder="subtitle"/>
-      </label>
-      <label>
-        Author
-        <input type="text" id="author" required />
-      </label>
-      <label>
-        Content
-        <input type="text" id="content" placeholder="content"/>
-      </label>
+<form id="article-form">
+    <input type="text" name="title" placeholder="Tytuł" required />
+    <input type="text" name="subtitle" placeholder="Podtytuł" required />
+    <input type="text" name="author" placeholder="Autor" required />
+    <textarea name="content" placeholder="Treść" required></textarea>
+    <input type="date" name="created_at" />
+    <button type="submit">Dodaj artykuł</button>
+</form>
 
-      <button type="submit" id="submit">Dodaj element</button>
-      <br>
-      <button type="reset" id="reset">Resetuj formularz</button>
-    </form>
-    </main>
-    <div id="articlesContainer"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
